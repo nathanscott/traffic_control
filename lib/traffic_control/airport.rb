@@ -9,7 +9,7 @@ module TrafficControl
       self.host = host
       self.settings = {}
       self.clients = {}
-    
+
       snmp_results = smnpwalk_results(host, community)
       snmp_results.each do |setting|
         if setting[1] == "0"
@@ -22,13 +22,13 @@ module TrafficControl
 
       self.clients.each { |key, value| self.clients[key] = Hash[value] }
     end
-  
+
     private
     def smnpwalk_results host, community
       snmpcmd = "#{SNMPBIN} -m AIRPORT-BASESTATION-3-MIB -Osq -v 2c "
       snmpcmd += "-c \"#{community}\" \"#{host}\" "
       snmpcmd += "SNMPv2-SMI::enterprises.apple.airport"
-    
+
       `#{snmpcmd}`.chomp.split("\n").collect{ |v| v.split(/\.(.+)/).collect{ |t| t.split(" ") }.flatten }
     end
   end
