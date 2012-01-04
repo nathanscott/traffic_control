@@ -1,4 +1,8 @@
-h1. Airport Extreme SNMP thing
+h1. Traffic Control
+
+Helps you monitor your Airport Extreme traffic.
+
+h2. Features
 
 Spits out some basic snmp info including:
 * Number of wireless clients
@@ -10,6 +14,21 @@ Get network client information including:
 * IP Address
 * Time associated
 * Wireless strength
+
+h2. Example
+
+bc.. airport = TrafficControl::Airport.new "airport.local", "public"
+
+puts "There are around #{airport.settings["wirelessNumber"]} folk#{"s" unless airport.settings["wirelessNumber"] == 1} on your wifi"
+puts airport.clients.inspect
+
+airport.clients.each do |client, attributes|
+  puts "Details for client with MAC address #{client}:"
+  attributes.each do |name, details|
+    puts "#{name}:   #{details}"
+  end
+  puts "--\n"
+end
 
 
 h2. Requirements
