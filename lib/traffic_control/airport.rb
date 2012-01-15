@@ -9,21 +9,23 @@ module TrafficControl
       @host = host
       @community = community
       @settings = {}
-      @clients = {}
+      @clients = []
     end
     
     def load_data!
+      client_data = {}
+      
       snmp_results = snmp_parser(snmp_output(@host, @community))
       snmp_results.each do |setting|
         if setting[1] == "0"
           self.settings[setting[0]] = setting[2]
         else
-          self.clients[setting[1]] ||= []
-          self.clients[setting.delete(setting[1])] << setting
+          client_data[setting[1]] ||= []
+          client_data[setting.delete(setting[1])] << setting
         end      
       end
 
-      self.clients.each { |key, value| self.clients[key] = Hash[value] }      
+      client_data.each { |key, value| self.clients << TrafficControl::Client.new(Hash[value])  }
     end
 
     def snmp_output(host, community)
